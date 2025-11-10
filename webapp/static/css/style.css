@@ -1,0 +1,78 @@
+/* Design tokens */
+:root {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --text: #1b1f29;
+  --muted: #6b7280;
+  --primary: #4f46e5; /* indigo-600 */
+  --primary-2: #6366f1; /* indigo-500 */
+  --ring: rgba(99,102,241,.35);
+}
+[data-theme="dark"] {
+  --bg: #0b0f1a;
+  --surface: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #8b5cf6;
+  --primary-2: #a78bfa;
+  --ring: rgba(167,139,250,.35);
+}
+
+/* Base */
+html, body { height: 100%; font-family: "Cairo", "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* Navbar */
+.navbar { background: var(--surface) !important; box-shadow: 0 4px 18px rgba(0,0,0,.06); }
+.navbar-brand { font-weight: 800; letter-spacing: .4px; }
+.nav-link { color: var(--muted) !important; }
+.nav-link:hover { color: var(--text) !important; }
+
+/* Cards and tables */
+.card { border-radius: 14px; background: var(--surface); box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 0; }
+.table { vertical-align: middle; color: var(--text); }
+.table thead th { background: linear-gradient(180deg,#fafbff, #f2f4f8); font-weight: 700; border-bottom: 0; }
+.table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0,0,0,.02); }
+
+/* Buttons */
+.btn-primary { background-image: linear-gradient(135deg, var(--primary), var(--primary-2)); border: none; box-shadow: 0 6px 16px var(--ring); }
+.btn-primary:hover { filter: brightness(0.97); }
+.btn-secondary { background-color: #e9ecef; color: #111827; border: none; }
+
+/* Forms */
+.form-label { font-weight: 700; color: var(--muted); }
+.form-control, .form-select { border-radius: 12px; border: 1px solid #e5e7eb; }
+.form-control:focus, .form-select:focus { box-shadow: 0 0 0 4px var(--ring); border-color: transparent; }
+
+/* Spacing */
+.section { margin-bottom: 2rem; }
+h3, h4, h5 { letter-spacing: .3px; }
+.table-responsive { border-radius: 12px; }
+
+/* Remove hero card (as requested) - styles kept for future reuse but not used */
+
+/* Footer */
+.site-footer { color: var(--muted); font-size: .925rem; padding: 20px 0; flex-shrink: 0; }
+
+/* Theme switch */
+.theme-toggle { cursor: pointer; user-select: none; }
+
+/* Manage actions area */
+.actions-grid .form-control-lg, .actions-grid .form-select-lg {
+  font-size: 1rem;
+  padding: .6rem .9rem;
+}
+.actions-grid .form-label { font-size: .9rem; color: var(--muted); }
+.actions-grid .btn-lg { padding: .6rem 1.1rem; }
+
+/* Full-width responsive container */
+.page-container { width: 100%; padding-left: 24px; padding-right: 24px; flex: 1 0 auto; }
+
+/* Always use full width; removed max-width to prevent half-screen layout */
+
+/* Reduce top spacing on smaller screens */
+@media (max-width: 768px) {
+  .navbar { position: sticky; top: 0; z-index: 100; }
+}
+
+

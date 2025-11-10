@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-3">تصدير التقارير</h4>
+<form method="get" class="row g-3 mb-3">
+  <div class="col-md-3">
+    <label class="form-label">تاريخ البداية</label>
+    <input type="date" class="form-control" name="start" value="{{ start_date.isoformat() }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">تاريخ النهاية</label>
+    <input type="date" class="form-control" name="end" value="{{ end_date.isoformat() }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">المرحلة</label>
+    <select name="stage" class="form-select">
+      {% for s in stages %}
+      <option value="{{ s }}" {% if s==stage %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">الشعبة</label>
+    <select name="section" class="form-select">
+      {% for s in sections %}
+      <option value="{{ s }}" {% if s==section %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">المختبر</label>
+    <select name="lab" class="form-select">
+      <option value="الكل" {% if lab=='الكل' %}selected{% endif %}>الكل</option>
+      <option value="LAB1" {% if lab=='LAB1' %}selected{% endif %}>LAB1</option>
+      <option value="LAB2" {% if lab=='LAB2' %}selected{% endif %}>LAB2</option>
+      <option value="LAB3" {% if lab=='LAB3' %}selected{% endif %}>LAB3</option>
+      <option value="LAB4" {% if lab=='LAB4' %}selected{% endif %}>LAB4</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">المادة</label>
+    <input type="text" name="subject" class="form-control" value="{{ subject if subject != 'الكل' else '' }}" placeholder="مثال: برمجة">
+  </div>
+  <div class="col-12">
+    <button class="btn btn-secondary">تطبيق</button>
+  </div>
+ </form>
+
+<div class="d-flex gap-2 mb-3">
+  <a class="btn btn-outline-success" href="/export/excel?start={{ start_date }}&end={{ end_date }}&stage={{ stage }}&section={{ section }}&lab={{ lab }}&subject={{ subject }}">تنزيل Excel</a>
+  <a class="btn btn-outline-danger" href="/export/pdf?start={{ start_date }}&end={{ end_date }}&stage={{ stage }}&section={{ section }}&lab={{ lab }}&subject={{ subject }}">تنزيل PDF</a>
+ </div>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>التاريخ</th>
+        <th>المادة</th>
+        <th>الاسم</th>
+        <th>الرقم الامتحاني</th>
+        <th>المرحلة</th>
+        <th>الشعبة</th>
+        <th>المختبر</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for _, r in df.iterrows() %}
+      <tr>
+        <td>{{ r['date'] }}</td>
+        <td>{{ r['subject'] if r.get('subject') else '-' }}</td>
+        <td>{{ r['name'] }}</td>
+        <td>{{ r['exam_number'] }}</td>
+        <td>{{ r['stage'] }}</td>
+        <td>{{ r['section'] }}</td>
+        <td>{{ r['lab'] }}</td>
+        <td>{{ 'حاضر' if r['status']=='present' else 'غائب' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center">لا توجد بيانات</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ </div>
+{% endblock %}
+
+

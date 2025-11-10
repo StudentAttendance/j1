@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-3">تسجيل الحضور</h4>
+<form method="get" class="row g-3 mb-3">
+  <div class="col-md-3">
+    <label class="form-label">المرحلة</label>
+    <select name="stage" class="form-select">
+      {% for s in stages %}
+      <option value="{{ s }}" {% if s==stage %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">الشعبة</label>
+    <select name="section" class="form-select">
+      {% for s in sections %}
+      <option value="{{ s }}" {% if s==section %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">التاريخ</label>
+    <input type="date" name="date" class="form-control" value="{{ selected_date.isoformat() }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">المختبر</label>
+    <select name="lab" class="form-select">
+      <option value="الكل" {% if lab=='الكل' %}selected{% endif %}>الكل</option>
+      <option value="LAB1" {% if lab=='LAB1' %}selected{% endif %}>LAB1</option>
+      <option value="LAB2" {% if lab=='LAB2' %}selected{% endif %}>LAB2</option>
+      <option value="LAB3" {% if lab=='LAB3' %}selected{% endif %}>LAB3</option>
+      <option value="LAB4" {% if lab=='LAB4' %}selected{% endif %}>LAB4</option>
+    </select>
+  </div>
+  <div class="col-md-2 d-flex align-items-end">
+    <button class="btn btn-secondary w-100">تطبيق</button>
+  </div>
+ </form>
+
+<form method="post">
+  <div class="row g-2 mb-3">
+    <div class="col-md-4">
+      <label class="form-label">المادة</label>
+      <input type="text" name="subject" class="form-control" placeholder="مثال: برمجة أو حساب التفاضل" required>
+    </div>
+  </div>
+  <input type="hidden" name="stage" value="{{ stage }}">
+  <input type="hidden" name="section" value="{{ section }}">
+  <input type="hidden" name="date" value="{{ selected_date.isoformat() }}">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>التسلسل</th>
+          <th>الاسم</th>
+          <th>المرحلة</th>
+          <th>الشعبة</th>
+          <th>المختبر</th>
+          <th>الحالة</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students_list %}
+        {% set exam_no = s.exam_number|string %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.stage }}</td>
+          <td>{{ s.section or '-' }}</td>
+          <td>{{ s.lab or '-' }}</td>
+          <td>
+            <select name="status_{{ exam_no }}" class="form-select">
+              <option value="present" {% if prefill.get(exam_no)=='present' %}selected{% endif %}>حاضر</option>
+              <option value="absent" {% if prefill.get(exam_no)=='absent' %}selected{% endif %}>غائب</option>
+            </select>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center">لا يوجد طلبة</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-primary">حفظ الحضور</button>
+ </form>
+{% endblock %}
+
+

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-3">إدارة الطلبة</h4>
+
+<div class="card mb-3 p-3">
+  <h6 class="mb-2">استيراد من Excel</h6>
+  <form method="post" enctype="multipart/form-data" class="d-flex align-items-end gap-2">
+    <input type="hidden" name="action" value="import">
+    <div class="flex-grow-1">
+      <label class="form-label">اختر ملف Excel</label>
+      <input type="file" name="excel_file" class="form-control form-control-sm" accept=".xlsx,.xls" required>
+      <small class="text-muted">يجب أن يحتوي على: الاسم، الرقم الامتحاني، المرحلة، الشعبة (اختياري)، المختبر (اختياري)</small>
+    </div>
+    <button class="btn btn-success">استيراد</button>
+  </form>
+</div>
+
+<form method="get" class="row g-3 mb-3">
+  <div class="col-md-3">
+    <label class="form-label">الاسم</label>
+    <input name="name" class="form-control" value="{{ filters.name }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">الرقم الامتحاني</label>
+    <input name="exam" class="form-control" value="{{ filters.exam }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">المرحلة</label>
+    <select name="stage" class="form-select">
+      <option value="">الكل</option>
+      {% for s in stages %}<option value="{{ s }}" {% if filters.stage==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">الشعبة</label>
+    <select name="section" class="form-select">
+      <option value="">الكل</option>
+      {% for s in sections %}<option value="{{ s }}" {% if filters.section==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">المختبر</label>
+    <select name="lab" class="form-select">
+      <option value="">الكل</option>
+      {% for l in ['LAB1','LAB2','LAB3','LAB4'] %}<option value="{{ l }}" {% if filters.lab==l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-12">
+    <button class="btn btn-secondary">تطبيق</button>
+  </div>
+ </form>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>الاسم</th>
+        <th>الرقم الامتحاني</th>
+        <th>المرحلة</th>
+        <th>الشعبة</th>
+        <th>المختبر</th>
+        <th style="width: 620px;">إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.exam_number }}</td>
+        <td>{{ s.stage }}</td>
+        <td>{{ s.section or '-' }}</td>
+        <td>{{ s.lab or '-' }}</td>
+        <td>
+          <form method="post" class="actions-grid">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <input type="hidden" name="action" value="update">
+            <div class="row g-2">
+              <div class="col-md-3">
+                <label class="form-label mb-1">الاسم</label>
+                <input class="form-control form-control-lg" name="name" value="{{ s.name }}" placeholder="اكتب الاسم" title="تعديل الاسم">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label mb-1">الرقم الامتحاني</label>
+                <input class="form-control form-control-lg" name="exam_number" value="{{ s.exam_number }}" placeholder="مثال: 123" title="تعديل الرقم الامتحاني">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label mb-1">المرحلة</label>
+                <select class="form-select form-select-lg" name="stage" title="اختيار المرحلة">
+                  {% for st in ['الأولى','الثانية','الثالثة','الرابعة'] %}<option {% if s.stage==st %}selected{% endif %}>{{ st }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label mb-1">الشعبة</label>
+                <input class="form-control form-control-lg" name="section" value="{{ s.section }}" placeholder="A/B" title="تعديل الشعبة">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label mb-1">المختبر</label>
+                <select class="form-select form-select-lg" name="lab" title="اختيار المختبر">
+                  {% for l in ['LAB1','LAB2','LAB3','LAB4'] %}<option {% if s.lab==l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="mt-2 d-flex gap-2">
+              <button class="btn btn-primary btn-lg">تحديث</button>
+            </div>
+          </form>
+          <form method="post" class="mt-2" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <input type="hidden" name="action" value="delete">
+            <button class="btn btn-outline-danger btn-sm">حذف</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center">لا توجد نتائج</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ </div>
+{% endblock %}
+
+

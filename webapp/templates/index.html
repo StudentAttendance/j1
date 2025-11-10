@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-4">إحصائيات اليوم</h4>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card text-bg-light">
+      <div class="card-body">
+        <h5 class="card-title">عدد الطلبة</h5>
+        <p class="display-6">{{ total }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-bg-light">
+      <div class="card-body">
+        <h5 class="card-title">حضور اليوم</h5>
+        <p class="display-6 text-success">{{ present }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-bg-light">
+      <div class="card-body">
+        <h5 class="card-title">غياب اليوم</h5>
+        <p class="display-6 text-danger">{{ absent }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

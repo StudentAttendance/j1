@@ -1,0 +1,7 @@
+## المتطلبات
+- Python 3.10+
+- تثبيت الحزم:
+
+```bash
+pip install -r requirements.txt
+```

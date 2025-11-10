@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-3">تسجيل الطلبة</h4>
+<form method="post" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <label class="form-label">الاسم</label>
+    <input name="name" class="form-control" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">الرقم الامتحاني</label>
+    <input name="exam_number" class="form-control" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">المرحلة</label>
+    <select name="stage" class="form-select" required>
+      <option>الأولى</option>
+      <option>الثانية</option>
+      <option>الثالثة</option>
+      <option>الرابعة</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">الشعبة</label>
+    <input name="section" class="form-control" placeholder="اختياري">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">المختبر</label>
+    <select name="lab" class="form-select" required>
+      <option value="">اختر المختبر</option>
+      <option>LAB1</option>
+      <option>LAB2</option>
+      <option>LAB3</option>
+      <option>LAB4</option>
+    </select>
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary">حفظ الطالب</button>
+  </div>
+  </form>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>الرقم الامتحاني</th>
+        <th>المرحلة</th>
+        <th>الشعبة</th>
+        <th>المختبر</th>
+        <th>تاريخ الإضافة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ s.exam_number }}</td>
+        <td>{{ s.stage }}</td>
+        <td>{{ s.section or '-' }}</td>
+        <td>{{ s.lab or '-' }}</td>
+        <td>{{ s.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">لا يوجد بيانات</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ </div>
+{% endblock %}
+
+

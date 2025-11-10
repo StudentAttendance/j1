@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-3">البحث</h4>
+<form method="get" class="row g-3 mb-3">
+  <div class="col-md-4">
+    <label class="form-label">الاسم</label>
+    <input name="name" class="form-control" value="{{ request.args.get('name','') }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">الرقم الامتحاني</label>
+    <input name="exam" class="form-control" value="{{ request.args.get('exam','') }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">المختبر</label>
+    <select name="lab" class="form-select">
+      <option value="">الكل</option>
+      <option {% if request.args.get('lab')=='LAB1' %}selected{% endif %}>LAB1</option>
+      <option {% if request.args.get('lab')=='LAB2' %}selected{% endif %}>LAB2</option>
+      <option {% if request.args.get('lab')=='LAB3' %}selected{% endif %}>LAB3</option>
+      <option {% if request.args.get('lab')=='LAB4' %}selected{% endif %}>LAB4</option>
+    </select>
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <button class="btn btn-primary">بحث</button>
+  </div>
+ </form>
+
+<div class="table-responsive mb-3">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>الرقم الامتحاني</th>
+        <th>المرحلة</th>
+        <th>الشعبة</th>
+        <th>المختبر</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in results %}
+      <tr>
+        <td>{{ s.name }}</td>
+        <td>
+          <a href="?name={{ request.args.get('name','') }}&exam={{ request.args.get('exam','') }}&selected_exam={{ s.exam_number }}">{{ s.exam_number }}</a>
+        </td>
+        <td>{{ s.stage }}</td>
+        <td>{{ s.section or '-' }}</td>
+        <td>{{ s.lab or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-center">لا توجد نتائج</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ </div>
+
+{% if selected_exam %}
+  <h5>سجل الحضور للرقم الامتحاني: {{ selected_exam }}</h5>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead><tr><th>التاريخ</th><th>المادة</th><th>الحالة</th></tr></thead>
+      <tbody>
+        {% for r in att %}
+          <tr>
+            <td>{{ r.date }}</td>
+            <td>{{ r.subject if r.subject else '-' }}</td>
+            <td>{{ 'حاضر' if r.status=='present' else 'غائب' }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="text-center">لا يوجد سجل</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+{% endblock %}
+
+
